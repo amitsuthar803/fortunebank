@@ -21,7 +21,7 @@ export function formatTime(date) {
   hours = hours % 12;
   hours = hours ? hours : 12; // If the hour is 0, set it to 12 (midnight or noon)
 
-  return `${hours.toString().padStart(2, "0")}:${minutes} ${ampm}`;
+  return `${hours.toString().padStart(2, "0")} : ${minutes} ${ampm}`;
 }
 
 export function formatShortMonthDate(date) {

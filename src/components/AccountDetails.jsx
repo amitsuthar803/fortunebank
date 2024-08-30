@@ -14,7 +14,7 @@ function AccountDetails() {
         </span>
 
         {/* <span className=" text-primarylight font-semibold">04:00 pm</span> */}
-        <span className=" text-primarylight font-semibold">
+        <span className=" text-primarylight capitalize font-semibold">
           {formatTime(currentTime)}
         </span>
       </div>

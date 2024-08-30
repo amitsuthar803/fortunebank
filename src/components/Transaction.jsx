@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 function Transaction() {
+  const [showAll, setShowAll] = useState(false);
+
   const transactions = [
     {
       username: "sonu",
@@ -54,18 +56,29 @@ function Transaction() {
     },
   ];
 
+  const initialCount = 3;
+
+  const displayTransactions = showAll
+    ? transactions
+    : transactions.slice(0, initialCount);
+
   return (
     <div>
       <div className="flex justify-between items-center">
-        <h3 className="text-dark font-medium text-lg">Recent Transactions</h3>
-        <button className=" bg-dark text-secondary py-2 px-5 rounded-full">
+        <h3 className="text-dark font-medium text-lg">
+          {showAll ? "All Transactions" : "Recent Transactions"}
+        </h3>
+        <button
+          onClick={() => setShowAll((show) => !show)}
+          className=" bg-dark text-secondary py-2 px-5 rounded-full"
+        >
           View All <span className=" ml-2">{">"}</span>
         </button>
       </div>
       <div>
         {/* list */}
 
-        {transactions.map((transaction, index) => (
+        {displayTransactions.map((transaction, index) => (
           <div
             key={index}
             className="flex justify-between pr-3 items-center mt-3"
