@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Header from "./Header";
 import AccountDetails from "./AccountDetails";
 import MainDataContainer from "./MainDataContainer";
-import ButtonConrtainer from "./ButtonConrtainer";
+import ButtonContainer from "./ButtonContainer";
 
 function Dashboard() {
   const [isSelected, setIsSelected] = useState(1);
@@ -25,7 +25,7 @@ function Dashboard() {
           <MainDataContainer isSelected={isSelected} />
         </div>
         {/* container right */}
-        <ButtonConrtainer
+        <ButtonContainer
           buttons={buttons}
           setIsSelected={setIsSelected}
           isSelected={isSelected}
