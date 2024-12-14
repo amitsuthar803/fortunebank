@@ -13,7 +13,6 @@ function Transaction() {
         try {
           const userData = await getUserByEmail(user.email);
           if (userData?.transactions) {
-            // Sort transactions by timestamp in descending order (newest first)
             const sortedTransactions = [...userData.transactions].sort((a, b) => 
               new Date(b.timestamp) - new Date(a.timestamp)
             );
@@ -48,49 +47,79 @@ function Transaction() {
     const minutes = date.getMinutes();
     const ampm = hours >= 12 ? 'PM' : 'AM';
     hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-    return `${hours}:${minutesStr} ${ampm}`;
+    hours = hours ? hours : 12;
+    return `${hours}:${minutes.toString().padStart(2, '0')} ${ampm}`;
+  };
+
+  const formatAmount = (amount) => {
+    return new Intl.NumberFormat('en-IN', {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 0
+    }).format(amount);
+  };
+
+  const getTransactionIcon = (type) => {
+    switch (type) {
+      case 'withdrawal':
+        return '🏧';
+      case 'transfer':
+        return '💵';
+      default:
+        return '💵';
+    }
   };
 
   return (
-    <div>
+    <div className="h-full">
       <div className="flex justify-between items-center">
         <h3 className="text-dark font-medium text-lg">
           {showAll ? "All Transactions" : "Recent Transactions"}
         </h3>
-        <button
-          onClick={() => setShowAll((show) => !show)}
-          className="bg-dark text-secondary py-2 px-5 rounded-full"
-        >
-          View All <span className="ml-2">{">"}</span>
-        </button>
+        {transactions.length > initialCount && (
+          <button
+            onClick={() => setShowAll((show) => !show)}
+            className="bg-dark text-secondary py-2 px-5 rounded-full hover:bg-opacity-90"
+          >
+            {showAll ? "Show Less" : "View All"} <span className="ml-2">{">"}</span>
+          </button>
+        )}
       </div>
-      <div>
+      <div className="mt-4 flex flex-col gap-3">
         {displayTransactions.map((transaction, index) => (
           <div
             key={index}
-            className="flex justify-between pr-3 items-center mt-3"
+            className="flex justify-between pr-3 items-center  rounded-xl p-4 border-2 border-gray"
           >
             <div className="flex items-center gap-4">
-              <div
-                className={`${
-                  transaction.type === "debit" ? "bg-red-300" : "bg-green-300"
-                } p-4 rounded-xl`}
-              >
-                💵
+              <div className={`p-4 rounded-xl ${
+                transaction.type === 'withdrawal' || transaction.type === 'debit' ? 'bg-red-100' :
+                transaction.type === 'transfer' && transaction.with !== user.email ? 'bg-red-100' : 'bg-green-100'
+              }`}>
+                {getTransactionIcon(transaction.type)}
               </div>
               <div className="flex flex-col items-start justify-center">
-                <span className="font-medium">{transaction.with}</span>
-                <span className="font-normal">
+                <span className="font-medium">
+                  {transaction.type === 'withdrawal' ? 'Cash Withdrawal' :
+                   transaction.type === 'transfer' ? `Transfer ${transaction.with === user.email ? 'from' : 'to'} ${transaction.with}` :
+                   transaction.type === 'debit' ? 'Debit' : 'Credit'}
+                </span>
+                <span className="text-sm text-gray-600">
                   {formatDate(transaction.timestamp)} <span className="mx-1">•</span> {formatTime(transaction.timestamp)}
                 </span>
               </div>
             </div>
-            <div>
-              <span className="font-semibold tracking-wide">
-                ₹{transaction.amount}
-              </span>
+            <div className={`font-semibold ${
+              transaction.type === 'withdrawal' || 
+              transaction.type === 'debit' ||
+              (transaction.type === 'transfer' && transaction.with !== user.email)
+                ? 'text-red-500'
+                : 'text-green-500'
+            }`}>
+              {transaction.type === 'withdrawal' || 
+               transaction.type === 'debit' ||
+               (transaction.type === 'transfer' && transaction.with !== user.email)
+                ? '-' : '+'}
+              ₹{formatAmount(transaction.amount)}
             </div>
           </div>
         ))}

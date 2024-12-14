@@ -48,7 +48,7 @@ export const transferMoney = async (senderEmail, receiverEmail, amount) => {
     await updateDoc(senderRef, {
       balance: sender.balance - transferAmount,
       transactions: [...(sender.transactions || []), {
-        type: "debit",
+        type: "transfer",
         amount: transferAmount,
         with: receiver.email,
         timestamp: new Date().toISOString()
@@ -60,7 +60,7 @@ export const transferMoney = async (senderEmail, receiverEmail, amount) => {
     await updateDoc(receiverRef, {
       balance: receiver.balance + transferAmount,
       transactions: [...(receiver.transactions || []), {
-        type: "credit",
+        type: "transfer",
         amount: transferAmount,
         with: sender.email,
         timestamp: new Date().toISOString()
@@ -176,6 +176,45 @@ export const getLoanStatus = async (userEmail) => {
     };
   } catch (error) {
     console.error("Error getting loan status:", error);
+    throw error;
+  }
+};
+
+// Withdraw money
+export const withdrawMoney = async (userEmail, amount) => {
+  try {
+    // Convert amount to number
+    const withdrawalAmount = Number(amount);
+    if (isNaN(withdrawalAmount) || withdrawalAmount <= 0) {
+      throw new Error("Invalid amount");
+    }
+
+    // Get user details
+    const user = await getUserByEmail(userEmail);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (user.balance < withdrawalAmount) {
+      throw new Error("Insufficient balance");
+    }
+
+    // Update user's balance
+    const userRef = doc(db, "users", user.id);
+    await updateDoc(userRef, {
+      balance: user.balance - withdrawalAmount,
+      transactions: [...(user.transactions || []), {
+        type: "withdrawal",
+        amount: withdrawalAmount,
+        timestamp: new Date().toISOString(),
+        description: "Cash Withdrawal"
+      }]
+    });
+
+    return { success: true, message: "Withdrawal successful" };
+  } catch (error) {
+    console.error("Error in withdrawal:", error);
     throw error;
   }
 };
