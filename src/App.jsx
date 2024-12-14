@@ -4,27 +4,30 @@ import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
+import { BalanceProvider } from "./context/BalanceContext";
 import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Toaster position="top-center" reverseOrder={false} />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <AppLayout>
-                  <Dashboard />
-                </AppLayout>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </Router>
+      <BalanceProvider>
+        <Router>
+          <Toaster position="top-center" reverseOrder={false} />
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <AppLayout>
+                    <Dashboard />
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+          </Routes>
+        </Router>
+      </BalanceProvider>
     </AuthProvider>
   );
 }

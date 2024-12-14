@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import { transferMoney, getCurrentBalance } from "../firebase/userOperations";
+import { transferMoney } from "../firebase/userOperations";
+import { useBalance } from "../context/BalanceContext";
 import { toast } from "react-hot-toast";
 
 function TransferAmount() {
   const { user } = useAuth();
+  const { refreshBalance } = useBalance();
   const [receiverEmail, setReceiverEmail] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,7 @@ function TransferAmount() {
     try {
       setLoading(true);
       await transferMoney(user.email, receiverEmail, amount);
+      await refreshBalance(); // Refresh the balance after successful transfer
       toast.success("Transfer successful!");
       setReceiverEmail("");
       setAmount("");
