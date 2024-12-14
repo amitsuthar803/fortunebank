@@ -18,7 +18,7 @@ function Dashboard() {
       <Header />
       <main className="flex justify-between gap-5  my-5  max-md:flex-col-reverse">
         {/* container left */}
-        <div className="flex h-full   flex-1 flex-col  gap-5  items-start justify-start ">
+        <div className="flex h-full flex-1 flex-col  gap-5  items-start justify-start ">
           {/* balance display */}
           <AccountDetails />
           {/* Render section */}
