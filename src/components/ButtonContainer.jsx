@@ -17,7 +17,7 @@ function ButtonConrtainer({ buttons, setIsSelected, isSelected }) {
           key={index}
           className={`${
             isSelected === index ? "bg-dark text-secondary" : ""
-          } font-medium bg-btn text-xl capitalize py-6 flex items-center justify-center gap-3 max-md:h-[40px] rounded-[35px] max-md:w-[100%] max-md:px-3 text-dark w-full border-2 border-slate-600 max-md:w-[60px]`}
+          } font-medium bg-btn text-xl capitalize py-6 flex items-center justify-center gap-3 max-md:h-[40px] rounded-[35px] max-md:w-[100%] max-md:px-3 text-dark w-full border-2 border-slate-600 max-md:w-100% `}
         >
           {icons[index]}
           <span className="max-md:hidden">{button}</span>

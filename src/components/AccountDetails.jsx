@@ -1,14 +1,16 @@
 import React from "react";
 import { formatDateWithYear, formatTime } from "../utils/dateUtils";
 import { useCurrentTime } from "../hooks/useCurrentTime";
+import { useAuth } from "../context/AuthContext";
 
 function AccountDetails() {
   const currentTime = useCurrentTime();
+  const {  user } = useAuth();
 
   return (
     <div className=" flex justify-between items-start rounded-[35px] py-6 px-5 bg-primary border-2 border-gray w-full">
       <div className="flex flex-col">
-        <h2 className="text-2xl font-semibold">Welcome, Amit Suthar</h2>
+        <h2 className="text-2xl font-semibold">Welcome, {user?.displayName}</h2>
         <span className="text-primarylight font-semibold">
           {formatDateWithYear(new Date())}
         </span>
